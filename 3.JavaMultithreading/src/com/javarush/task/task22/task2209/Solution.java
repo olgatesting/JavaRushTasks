@@ -17,7 +17,6 @@ public class Solution {
             while (fileIn.ready()) {
                 sb.append(fileIn.readLine());
             }
-            System.out.println(sb.toString());
             String[] words = sb.toString().split(" ");
             StringBuilder result = getLine(words);
             System.out.println(result.toString());
@@ -27,43 +26,36 @@ public class Solution {
     }
 
     public static StringBuilder getLine(String... words) {
-        if ( words ==null || words.toString().isEmpty()) return null;
-        ArrayList list =null;
+        StringBuilder result = new StringBuilder();
+        if (words == null || words.length == 0) return result;
+        if (words.length==1 || words[0].equals("")) return result.append(words[0]);
+
+        ArrayList list =new ArrayList();
         for (int i=0; i<words.length; i++) {
             list.add(words[i]);
         }
-        Collections.sort(list);
+        String lastLetter, firstLetter, nextWord;
 
-        StringBuilder builder = new StringBuilder();
-        ArrayList<String> wordsInChain = new ArrayList<>();
-        ArrayList<String> wordsNotInChain = new ArrayList<>();
+        lastLetter = list.get(0).toString().substring(list.get(0).toString().length()-1);
+        result.append(list.get(0).toString()).append(' ');
+        list.remove(list.get(0).toString());
 
-        for (int i=0; i<list.size(); i++) {
-            String word = list.get(i).toString();
-            for (int k=0; k<list.size() ; k++) {
-                String secWord = list.get(k).toString().toLowerCase();
-                if (!(wordsInChain.contains(word))&& (word.charAt(word.length()-1)==secWord.charAt(0))) {
-                    wordsInChain.add(word);
-                    wordsInChain.add(secWord);
-                    i++;
+            for (int j=0; j<list.size(); ) {
+                nextWord = list.get(j).toString();
+                firstLetter = nextWord.substring(0,1).toLowerCase();
+                if (lastLetter.equals(firstLetter)) {
+                    lastLetter = nextWord.substring(nextWord.length()-1);
+                   result.append(nextWord).append(' ');
+                   list.remove(nextWord);
+                   j=0;
                 } else {
-                    if (!wordsNotInChain.contains(word))
-                    {
-                        wordsNotInChain.add(word);
-                    }
-                    i++;
+                 j++;
                 }
             }
-        }
-
-        for (int i=0; i<wordsInChain.size(); i++) {
-            builder.append(wordsInChain.get(i)).append(' ');
-        }
-
-        for (int i=0; i<wordsNotInChain.size(); i++) {
-            builder.append(wordsNotInChain.get(i)).append(' ');
-        }
-        builder.trimToSize();
-          return builder;
+            for (int i=0; i<list.size(); i++) {
+                result.append(list.get(i).toString()).append(' ');
+            }
+        result.trimToSize();
+          return result;
     }
 }
