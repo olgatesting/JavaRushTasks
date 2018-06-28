@@ -2,7 +2,6 @@ package com.javarush.task.task22.task2209;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /*
 Составить цепочку слов
@@ -10,8 +9,8 @@ C:\Users\User\Desktop\DreamJob\Java\file1.txt
 */
 public class Solution {
     public static void main(String[] args) throws IOException {
-        try (BufferedReader rcon = new BufferedReader(new InputStreamReader(System.in));
-             BufferedReader fileIn = new BufferedReader(new FileReader(rcon.readLine())))
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+             BufferedReader fileIn = new BufferedReader(new FileReader(reader.readLine())))
         {
             StringBuilder sb = new StringBuilder();
             while (fileIn.ready()) {
@@ -34,18 +33,30 @@ public class Solution {
         for (int i=0; i<words.length; i++) {
             list.add(words[i]);
         }
-        String lastLetter, firstLetter, nextWord;
+        String lastLetter, firstLetter, firstWord, nextWord;
 
-        lastLetter = list.get(0).toString().substring(list.get(0).toString().length()-1);
-        result.append(list.get(0).toString()).append(' ');
-        list.remove(list.get(0).toString());
+        firstWord = list.get(0).toString();
+        lastLetter = firstWord.substring(firstWord.length()-1);
+        result.append(firstWord).append(' ');
+
+        for (int k=0; k<list.size(); k++) {
+            if (firstWord.equals(list.get(k))) {
+                list.remove(list.get(k));
+            }
+        }
+        list.remove(firstWord);
 
             for (int j=0; j<list.size(); ) {
                 nextWord = list.get(j).toString();
                 firstLetter = nextWord.substring(0,1).toLowerCase();
                 if (lastLetter.equals(firstLetter)) {
                     lastLetter = nextWord.substring(nextWord.length()-1);
-                   result.append(nextWord).append(' ');
+                    result.append(nextWord).append(' ');
+                    for (int k=j; k<list.size(); k++) {
+                        if (nextWord.equals(list.get(k))) {
+                            list.remove(list.get(k));
+                        }
+                    }
                    list.remove(nextWord);
                    j=0;
                 } else {
